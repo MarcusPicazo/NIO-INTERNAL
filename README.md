@@ -1,169 +1,68 @@
-# NIMIO LEVELS
+# 🚀 Nimio Levels | Internal Management Platform / Plataforma de Gestión Interna
 
-Web app privada para motivacion, puntos, niveles, avatares y recompensas del equipo NIMIO.
+![Next.js](https://img.shields.io/badge/Next.js-black?style=for-the-badge&logo=next.js&logoColor=white) ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white) ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white) ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
 
-## Arquitectura propuesta
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen?style=for-the-badge&logo=netlify)](https://nimio-levels.netlify.app/login)
 
-- **Next.js + TypeScript**: app router, server actions y rutas protegidas por cookies HTTP-only firmadas.
-- **Supabase Postgres**: tablas, vistas de saldos, funciones atomicas para aprobaciones y politicas RLS.
-- **Supabase Storage**: avatares, GIFs, imagenes de recompensas y evidencia privada.
-- **Tailwind CSS**: interfaz oscura, industrial, premium y responsive.
-- **Vercel**: despliegue recomendado, usando variables de entorno.
+(Spanish version below)
 
-El navegador nunca recibe la service role key. Las operaciones sensibles pasan por servidor.
+---
 
-## Tablas principales
+## 🇬🇧 English
 
-- `admins`: dueno administrador con correo, contrasena hasheada e indicador de propietario.
-- `members`: perfiles del equipo, estado, avatar y notas privadas.
-- `access_codes`: codigos personales hasheados con `pgcrypto`; los codigos antiguos se bloquean.
-- `levels`: niveles editables por puntos historicos.
-- `member_level_assets`: avatar/GIF personalizado por miembro y nivel.
-- `point_requests`: solicitudes de puntos del integrante.
-- `point_movements`: ledger/auditoria de todo cambio de puntos.
-- `rewards`: recompensas y valor MXN editable.
-- `redemption_requests`: solicitudes de canje con snapshot de valor al aprobar.
-- `admin_audit_logs`: bitacora de acciones administrativas.
-- `projects`: proyectos NIO/NIMIO.
-- `system_settings`: equivalencias generales, como valor MXN por punto.
+A private, full-stack web application developed to manage team motivation, point tracking, level progression, custom avatars, and reward redemptions for the **NIMIO** team. 
 
-## Permisos
+Built with an emphasis on security and performance, the application ensures sensitive operations and approvals are handled securely server-side through signed HTTP-only cookies and robust database policies.
 
-El MVP usa sesiones propias firmadas:
+### 🔗 Live Link
+Access the platform here: [https://nimio-levels.netlify.app/login](https://nimio-levels.netlify.app/login)
 
-- Miembro: entra con codigo personal, solo ve su perfil, movimientos, solicitudes y canjes.
-- Administrador: entra con correo y contrasena creados una sola vez en `/admin/setup`.
-- Token temporal: opcional como respaldo de emergencia si configuras `ADMIN_ACCESS_TOKEN`.
+### Features
+* **Role-Based Access Control:** Distinct workflows for Admins (email/password) and Members (hashed personal access codes).
+* **Point & Reward Ecosystem:** Members can submit point requests with private evidence. Admins can approve, adjust, or reject requests, and manage reward redemptions.
+* **Dynamic Progression:** Calculates member levels based on historical points, dynamically unlocking custom avatars or GIFs without losing progress when points are spent.
+* **Admin Dashboard & Analytics:** Comprehensive management of users, reward catalogs, point ledgers, and CSV report exports.
 
-La migracion tambien deja politicas RLS preparadas para una futura integracion directa con Supabase Auth y claims:
+### Technologies & Architecture
+* **Frontend:** **Next.js** (App Router & Server Actions) and **TypeScript** for a scalable, type-safe architecture.
+* **Styling:** **Tailwind CSS** delivering a premium, industrial, and responsive dark-mode UI.
+* **Backend & Database:** **Supabase Postgres** for atomic functions, views, and RLS policies, coupled with `pgcrypto` for secure code hashing.
+* **Cloud Storage:** **Supabase Storage** for handling avatars, GIFs, reward images, and private evidence.
 
-- `app_role = admin` para administracion.
-- `member_id = <uuid>` para lectura propia de integrante.
+### How to Run Locally
+1. Clone the repository and install dependencies using `pnpm install`.
+2. Copy `.env.example` to `.env.local` and add your Supabase credentials and a generated `NIMIO_SESSION_SECRET`.
+3. Run the initial schema migration and seed data in your Supabase SQL Editor.
+4. Start the development server with `pnpm dev`.
 
-## MVP listo
+---
 
-- Login privado por codigo personal.
-- Login admin.
-- Panel admin con dashboard, miembros, solicitudes, movimientos, canjes, recompensas, niveles, reportes, export CSV y configuracion.
-- Perfil privado de integrante.
-- Solicitud de puntos con evidencia URL o archivo privado.
-- Aprobacion, ajuste, rechazo o solicitud de mas evidencia.
-- Canjes sin descuento hasta aprobacion.
-- Movimiento negativo automatico al aprobar canje.
-- Saldos separados: historicos, gastados, descontados y disponibles.
-- Niveles calculados con puntos historicos.
-- Avatares/GIFs por miembro y por nivel.
-- Storage para assets y evidencia.
-- Datos semilla para probar.
+## 🇪🇸 Español
 
-## Preparado para mejoras futuras
+Una aplicación web privada *full-stack* desarrollada para gestionar la motivación, el seguimiento de puntos, la progresión de niveles, avatares personalizados y el canje de recompensas para el equipo **NIMIO**.
 
-- Supabase Auth con JWT claims para que RLS sea usado directamente desde cliente.
-- Notificaciones en tiempo real.
-- Filtros avanzados por periodo, proyecto y persona en UI.
-- Reglas de equivalencia por rangos.
-- Limites mensuales automaticos de recompensas.
-- Edicion completa inline de niveles/recompensas existentes.
-- Firmas o comprobantes de pago estructurados.
+Construida con un enfoque en la seguridad y el rendimiento, la aplicación asegura que las operaciones sensibles se manejen de forma segura del lado del servidor a través de cookies HTTP-only firmadas y políticas robustas de base de datos.
 
-## Instalacion local
+### 🔗 Enlace a la plataforma
+Puedes acceder a la plataforma aquí: [https://nimio-levels.netlify.app/login](https://nimio-levels.netlify.app/login)
 
-1. Instala dependencias:
+### Características Principales
+* **Control de Acceso por Roles:** Flujos de trabajo separados para Administradores (correo/contraseña en `/admin/login`) y Miembros (códigos de acceso personales hasheados).
+* **Ecosistema de Puntos y Recompensas:** Los miembros pueden solicitar puntos adjuntando evidencia privada. Los administradores pueden aprobar, ajustar o rechazar solicitudes y gestionar canjes.
+* **Progresión Dinámica:** Calcula los niveles basándose en los puntos históricos, desbloqueando avatares o GIFs personalizados sin perder progreso al gastar puntos.
+* **Panel de Administración y Analíticas:** Gestión completa de usuarios, catálogo de recompensas, auditoría de movimientos (*ledger*) y exportación de reportes en CSV.
 
-```bash
-pnpm install
-```
+### Tecnologías y Arquitectura
+* **Frontend:** **Next.js** (App Router y Server Actions) y **TypeScript** para una arquitectura escalable y de tipado estricto.
+* **Estilos:** **Tailwind CSS** para una interfaz oscura, industrial, premium y totalmente responsiva.
+* **Backend y Base de Datos:** **Supabase Postgres** para funciones atómicas, vistas de saldos y políticas RLS, utilizando `pgcrypto` para el hash seguro de códigos.
+* **Almacenamiento en la Nube:** **Supabase Storage** para avatares, imágenes de recompensas y evidencia privada.
 
-2. Crea `.env.local` desde `.env.example`:
+### Instalación Local
+1. Clona el repositorio e instala las dependencias usando `pnpm install`.
+2. Copia `.env.example` a `.env.local` y configura tus variables de entorno de Supabase y tu `NIMIO_SESSION_SECRET`.
+3. Ejecuta la migración del esquema inicial y los datos semilla (`seed.sql`) en el editor SQL de Supabase.
+4. Inicia el servidor local con `pnpm dev`.
 
-```bash
-cp .env.example .env.local
-```
-
-3. Configura:
-
-```bash
-NEXT_PUBLIC_SUPABASE_URL=...
-SUPABASE_SERVICE_ROLE_KEY=...
-NIMIO_SESSION_SECRET=...
-ADMIN_ACCESS_TOKEN=... # opcional
-```
-
-Genera `NIMIO_SESSION_SECRET` con:
-
-```bash
-openssl rand -base64 48
-```
-
-4. Ejecuta la migracion en Supabase SQL Editor:
-
-```sql
--- contenido de supabase/migrations/0001_initial_schema.sql
-```
-
-5. Ejecuta datos semilla:
-
-```sql
--- contenido de supabase/seed.sql
-```
-
-6. Corre local:
-
-```bash
-pnpm dev
-```
-
-## Datos de prueba
-
-Los codigos de prueba estan en el seed y son faciles de borrar:
-
-- `AMY-4P9X`
-- `DAVID-7MQR`
-- `JORGE-8F2K`
-- `MEGG-5NIO`
-- `DEMIAN-9ADM`
-
-El primer admin se crea una sola vez en `/admin/setup`. Despues entra por `/admin/login` con correo y contrasena.
-
-## Despliegue en Vercel
-
-1. Sube el repo a GitHub.
-2. Crea proyecto en Vercel.
-3. Agrega las variables:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `SUPABASE_SERVICE_ROLE_KEY`
-   - `NIMIO_SESSION_SECRET`
-   - `ADMIN_ACCESS_TOKEN` solo si quieres respaldo temporal
-4. Ejecuta migracion y seed en Supabase antes del primer uso.
-5. Deploy.
-6. Abre `/admin/setup` y crea el primer dueno administrador.
-
-## Valores que debes configurar despues
-
-- Correo y contrasena del dueno administrador en `/admin/setup`.
-- URL y service role key de Supabase.
-- Secret de sesion.
-- Recompensas reales y valores MXN.
-- Niveles definitivos.
-- Avatares/GIFs base.
-- Avatares/GIFs personalizados por persona.
-- Proyectos activos.
-- Regla real de equivalencia de puntos.
-
-## Pruebas manuales de seguridad y funcionamiento
-
-1. Entrar con codigo valido de Amy y confirmar que solo ve su perfil.
-2. Entrar con codigo invalido y confirmar error claro.
-3. Bloquear un miembro desde admin y confirmar que su codigo ya no entra.
-4. Regenerar codigo y confirmar que el codigo anterior queda bloqueado.
-5. Crear solicitud de puntos como miembro y confirmar que no suma saldo.
-6. Aprobar solicitud desde admin y confirmar movimiento positivo.
-7. Aprobar con ajuste y confirmar `approved_adjusted`.
-8. Rechazar solicitud y confirmar que no crea movimiento.
-9. Crear descuento manual con motivo y confirmar que baja disponibles, no historicos.
-10. Solicitar canje y confirmar que no descuenta hasta aprobacion.
-11. Aprobar canje y confirmar movimiento negativo, puntos gastados y snapshot MXN.
-12. Gastar puntos y confirmar que el nivel/avatar no baja.
-13. Exportar CSV de miembros, movimientos, solicitudes, canjes, recompensas y niveles.
-14. Abrir vista imprimible de un miembro y guardar PDF desde el navegador.
-15. Intentar abrir evidencia privada sin sesion y confirmar rechazo.
+---
+Developed by / Desarrollado por **Marco Antonio Escalona García** - Systems Engineer & AI Product Engineer
